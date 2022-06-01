@@ -17,7 +17,7 @@ namespace NoteTakingApp.Models
         public string NoteTitle { get; set; }
 
         [Required]
-        public DateTime DateCreated { get; set; }
+        public string DateCreated { get; set; }
 
         [Required]
         public string Author { get; set; }

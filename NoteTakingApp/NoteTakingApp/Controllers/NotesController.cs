@@ -24,7 +24,12 @@ namespace NoteTakingApp.Controllers
         // GET: NotesController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Notes result = null;
+            using (NotesContext context = new NotesContext())
+            {
+                result = context.Notes.Where(x => x.Id == id).First();
+            }
+                return View(result);
         }
 
         // GET: NotesController/Create
@@ -40,18 +45,33 @@ namespace NoteTakingApp.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                using (NotesContext context = new NotesContext())
+                {
+                    Notes note = new Notes();
+                    note.NoteTitle = collection["NoteTitle"];
+                    note.Author = collection["Author"];
+                    note.NoteBody = collection["NoteBody"];
+                    note.DateCreated = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+                    context.Notes.Add(note);
+                    context.SaveChanges();
+                }
+                    return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
 
         // GET: NotesController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Notes result = null;
+            using (NotesContext context = new NotesContext())
+            {
+                result = context.Notes.Where(x => x.Id == id).First();
+            }
+            return View(result);
         }
 
         // POST: NotesController/Edit/5
@@ -61,18 +81,33 @@ namespace NoteTakingApp.Controllers
         {
             try
             {
+                using (NotesContext context = new NotesContext())
+                {
+                    Notes note = context.Notes.Where(x => x.Id == id).First();
+                    note.NoteTitle = collection["NoteTitle"];
+                    note.Author = collection["Author"];
+                    note.NoteBody = collection["NoteBody"];
+                    note.DateCreated = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+                    context.Notes.Update(note);
+                    context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
 
         // GET: NotesController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Notes result = null;
+            using (NotesContext context = new NotesContext())
+            {
+                result = context.Notes.Where(x => x.Id == id).First();
+            }
+                return View(result);
         }
 
         // POST: NotesController/Delete/5
@@ -82,11 +117,18 @@ namespace NoteTakingApp.Controllers
         {
             try
             {
+                Notes result = null;
+                using (NotesContext context = new NotesContext())
+                {
+                    result = context.Notes.Where(x => x.Id == id).First();
+                    context.Remove(result);
+                    context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
     }
